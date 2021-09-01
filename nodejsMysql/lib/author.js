@@ -62,3 +62,50 @@ exports.create_process = function (request, response) {
       )
   });
 };
+
+
+exports.update = function(request, response){
+  db.query(`SELECT * FROM topic`, function(error,topics){
+      db.query(`SELECT * FROM author`, function(error2,authors){
+      const _url = request.url;
+      const queryData = url.parse(_url, true).query;
+      db.query('SELECT * FROM author WHERE id=?', [queryData.id], function(error3, author){
+     
+      var title = 'author';
+      const list = template.list(topics);
+      const html = template.HTML(title, list,
+          `
+          
+            ${template.authorTable(authors)}
+          <style>
+            table {
+              border-collapse: collapse;
+            }
+            td {
+               border: 1px solid black;
+            }
+          </style>
+
+          <form action="/author/update_process" method="post">
+            <p>
+                <input type="hidden" name="id" placeholder="${queryData.id}">
+            </p>
+            <p>
+              <input type="text" name="name" value="${author[0].name}" placeholder="name">
+          </p>
+            <p>
+                <textarea name="profile" placeholder="description">${author[0].profile}</textarea>
+            </p>
+            <p>
+                <input type="submit" value="update">
+            </p>
+        </form>
+          `,
+          ``
+      );
+      response.writeHead(200);
+      response.end(html);
+      });
+    });
+  });
+}
