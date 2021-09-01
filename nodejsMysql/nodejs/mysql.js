@@ -1,8 +1,10 @@
 var mysql      = require('mysql');
+var dbpassword = require('../password.js')
+
 var connection = mysql.createConnection({
   host     : 'localhost',
   user     : 'root',
-  password : 'wjs970',
+  password : `${dbpassword.password}`,
   database : 'opentutorials',
   port: '3306'
 });

@@ -3,19 +3,20 @@ var fs = require('fs');
 var url = require('url');
 var qs = require('querystring');
 var template = require('./lib/template.js');
+var dbpassword = require('./password.js')
 var path = require('path');
 var sanitizeHtml = require('sanitize-html');
 var mysql = require('mysql');
 var db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'wjs970',
+  password: `${dbpassword.password}`,
   database: 'opentutorials'
 });
 
 db.connect();
 
-
+console.log(dbpassword.password)
 
 var app = http.createServer(function(request,response){
     var _url = request.url;
@@ -95,7 +96,7 @@ var app = http.createServer(function(request,response){
     } else if(pathname === '/create_process'){
       var body = '';
       request.on('data', function(data){
-          body = body + data;
+          body = body + data;  
       });
       request.on('end', function(){
           var post = qs.parse(body);
