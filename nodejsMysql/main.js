@@ -1,30 +1,18 @@
-var http = require('http');
-var url = require('url');
-var qs = require('querystring');
-var template = require('./lib/template.js');
-var path = require('path');
-var db = require('./lib/db');
+const http = require('http');
+const url = require('url');
+const qs = require('querystring');
+const template = require('./lib/template.js');
+const path = require('path');
+const db = require('./lib/db');
+const topic = require('./lib/topic');
 
-
-var app = http.createServer(function(request,response){
-    var _url = request.url;
-    var queryData = url.parse(_url, true).query;
-    var pathname = url.parse(_url, true).pathname;
+const app = http.createServer(function(request,response){
+    const _url = request.url;
+    const queryData = url.parse(_url, true).query;
+    const pathname = url.parse(_url, true).pathname;
     if(pathname === '/'){
       if(queryData.id === undefined){
-      db.query('SELECT * FROM topic', function(error, topics){
-        console.log(topics);
-        var title = 'Welcome';
-        var description = 'Hello, Node.js';
-        var list = template.list(topics);
-        var html = template.HTML(title, list,
-            `<h2>${title}</h2>${description}`,
-            `<a href="/create">create</a>`
-        );
-        response.writeHead(200);
-        response.end(html);
-
-      });
+        topic.home(request, response);
       } else {
         db.query('SELECT * FROM topic', function(error, topics){
           if(error) {
@@ -35,10 +23,10 @@ var app = http.createServer(function(request,response){
               throw error2;
             }
             console.log(topic)
-          var title = topic[0].title;
-          var description = topic[0].description;
-          var list = template.list(topics);
-          var html = template.HTML(title, list,
+          const title = topic[0].title;
+          const description = topic[0].description;
+          const list = template.list(topics);
+          const html = template.HTML(title, list,
               `
               <h2>${title}</h2>
               ${description}
