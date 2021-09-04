@@ -15,7 +15,9 @@ app.get('/', function(request, response) {
   });
 });
  
-app.get('/page', (req, res) => res.send('/page'))
+app.get('/page/:pageId', function(request, response) {
+  return response.send(request.params);
+})
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'))
 
